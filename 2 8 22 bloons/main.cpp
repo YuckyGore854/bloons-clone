@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include<iostream>
+#include<math.h>
 
 using namespace std;
 
@@ -15,24 +16,26 @@ using namespace std;
 
 //create a struct: structs are like classes, but no functions (just variables)
 struct point {
-	int x;
-	int y;
+	double x;
+	double y;
 };
 class bloon {
 private:
-	int xpos;
-	int ypos;
+	double xpos;
+	double ypos;
 	int currPath;
 	int ticker;
+	int type;
+	int speed;
 	sf::CircleShape bloonCircle;
 	vector<point>myPath;
 public:
-	bloon(int x, int y, vector<point>Path);
+	bloon(double x, double y, vector<point>Path, int which);
 	~bloon();
 	bool atPathEnd();
 	void move();
 	void draw(sf::RenderWindow& window);
-	void print() { cout << currPath << " " << myPath.size() << endl; }
+	void print() { cout << xpos << " " << ypos << endl; }
 };
 
 int main() {
@@ -43,7 +46,7 @@ int main() {
 	p1.y = 793;
 	struct point p2;
 	p2.x = 443;
-	p2.y = 579;
+	p2.y = 578;
 	struct point p3;
 	p3.x = 200;
 	p3.y = 579;
@@ -119,8 +122,8 @@ int main() {
 	*/
 
 	//balloon variables
-	float xpos = 443; //start off screen
-	float ypos = 820;
+	float xpos = p1.x; //start off screen
+	float ypos = p1.y;
 	
 	int currPath = 0; //begin heading towards the first point in the pathing vector
 
@@ -129,7 +132,7 @@ int main() {
 	int tiktak = 0;
 	
 	
-	bloon red(xpos, ypos, pathPoints);
+	bloon red(xpos, ypos, pathPoints,2);
 
 	// GAME LOOP----------------------------------------------------------------------------------------
 	while (window.isOpen()){
@@ -153,8 +156,14 @@ int main() {
 			}
 		}
 		tiktak++;
-		if (tiktak % 200 == 0) {
-			blons.push_back(new bloon(xpos, ypos, pathPoints));
+		if (tiktak % 1000 == 0) {
+			blons.push_back(new bloon(xpos, ypos, pathPoints, 1));
+		}
+		if (tiktak % 1500 == 0) {
+			blons.push_back(new bloon(xpos, ypos, pathPoints, 2));
+		}
+		if (tiktak % 1800 == 0) {
+			blons.push_back(new bloon(xpos, ypos, pathPoints, 3));
 		}
 		for (blonsIter = blons.begin(); blonsIter != blons.end(); blonsIter++) {
 			(*blonsIter)->move();
@@ -168,21 +177,39 @@ int main() {
 			(*blonsIter)->draw(window);
 		}
 		red.draw(window);
-		cout << blons.size() << endl;
+		
 		window.display();
 	}
 
 	return 0;//buh bye
 }
 
-bloon::bloon(int x, int y, vector<point>Path) {
+bloon::bloon(double x, double y, vector<point>Path, int which) {
 	xpos = x;
 	ypos = y;
 	currPath = 0;
 	myPath = Path;
+	type = which;
+	if (type == 1) {
+		speed = 5;
+		bloonCircle.setFillColor(sf::Color(250, 0, 0));
+		bloonCircle.setRadius(20);
+	}
+	if (type == 2) {
+		speed = 7;
+		bloonCircle.setFillColor(sf::Color(0, 0, 255));
+		bloonCircle.setRadius(25);
+	}
+	if (type == 3){
+		speed = 9;
+		bloonCircle.setFillColor(sf::Color(0, 255, 0));
+		bloonCircle.setRadius(30);
+	}
+
+
 	ticker = 0;
-	bloonCircle.setRadius(25);
-	bloonCircle.setFillColor(sf::Color(250, 0, 0));
+	
+	
 	bloonCircle.setPosition(xpos, ypos);
 }
 bloon::~bloon() { }
@@ -192,24 +219,28 @@ void bloon::move() {
 	//the path is stored as a series of points in a vector called "pathPoints"
 
 	ticker++; //slow dem bloons down
-	if (ticker % 5 == 0) { //make 30 bigger to slow down baloon more
+	if (ticker % 100 == 0) { //make 30 bigger to slow down baloon more
+
+		//if (ypos < ((myPath[currPath].y += speed -= 1)) && ypos >(myPath[currPath].y += (speed -= 1))) {
+		//	ypos = myPath[currPath].y;
+		//}
 
 		//first check if you're at the turning point, move to next point if you are
-		if ((xpos == myPath[currPath].x) && (ypos == myPath[currPath].y))
+		if (sqrt((xpos - myPath[currPath].x) * (xpos - myPath[currPath].x) + (ypos - myPath[currPath].y) * (ypos - myPath[currPath].y)) < bloonCircle.getRadius())//circular collision lol
 			if (currPath < myPath.size() - 1) //don't walk off end of vector!
 				currPath++; //iterate to next point
 				
 
 		//if not there yet, move our x towards x position of next junction
 		if (xpos < myPath[currPath].x)
-			xpos += 1;
+			xpos += speed;
 		if (xpos > myPath[currPath].x)
-			xpos -= 1;
+			xpos -= speed;
 		//and move our y towards y position of next junction
 		if (ypos < myPath[currPath].y)
-			ypos += 1;
+			ypos += speed;
 		if (ypos > myPath[currPath].y)
-			ypos -= 1;
+			ypos -= speed;
 	}//end pathing algorithm**************************************************************
 	bloonCircle.setPosition(sf::Vector2f(xpos, ypos));
 }
