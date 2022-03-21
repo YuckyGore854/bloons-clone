@@ -87,6 +87,7 @@ int main() {
 
 	// create game window
 	sf::RenderWindow window(sf::VideoMode(800, 800), "bloons");
+	window.setFramerateLimit(60);
 
 
 	//balloon variables
@@ -124,13 +125,13 @@ int main() {
 			}
 		}
 		tiktak++;
-		if (tiktak % 1000 == 0) {
+		if (tiktak % 100 == 0) {
 			blons.push_back(new bloon(xpos, ypos, pathPoints, 1));
 		}
-		if (tiktak % 1500 == 0) {
+		if (tiktak % 150 == 0) {
 			blons.push_back(new bloon(xpos, ypos, pathPoints, 2));
 		}
-		if (tiktak % 1800 == 0) {
+		if (tiktak % 180 == 0) {
 			blons.push_back(new bloon(xpos, ypos, pathPoints, 3));
 		}
 		for (blonsIter = blons.begin(); blonsIter != blons.end(); blonsIter++) {

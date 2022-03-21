@@ -141,9 +141,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="bloon.cpp" />
+    <ClCompile Include="monkey.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bloon.h" />
+    <ClInclude Include="monkey.h" />
     <ClInclude Include="point.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
