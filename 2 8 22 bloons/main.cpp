@@ -125,13 +125,13 @@ int main() {
 			}
 		}
 		tiktak++;
-		if (tiktak % 100 == 0) {
+		if (tiktak % 10 == 0) {
 			blons.push_back(new bloon(xpos, ypos, pathPoints, 1));
 		}
-		if (tiktak % 150 == 0) {
+		if (tiktak % 15 == 0) {
 			blons.push_back(new bloon(xpos, ypos, pathPoints, 2));
 		}
-		if (tiktak % 180 == 0) {
+		if (tiktak % 18 == 0) {
 			blons.push_back(new bloon(xpos, ypos, pathPoints, 3));
 		}
 		for (blonsIter = blons.begin(); blonsIter != blons.end(); blonsIter++) {

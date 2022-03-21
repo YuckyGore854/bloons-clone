@@ -10,7 +10,6 @@ private:
 	double xpos;
 	double ypos;
 	int currPath;
-	int ticker;
 	int type;
 	int speed;
 	sf::CircleShape bloonCircle;
